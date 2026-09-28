@@ -21,6 +21,10 @@ services:
         value: database
       - key: CACHE_STORE
         value: database
+      - key: APP_URL
+        value: https://interior-webapp-php-backend.onrender.com
+      - key: SESSION_SECURE_COOKIE
+        value: "true"
       - key: RUN_MIGRATIONS
         value: "true"
       - key: RUN_SEEDS

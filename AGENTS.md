@@ -4,6 +4,20 @@ These guidelines are mandatory for all AI agents and developers building and mai
 
 ---
 
+## ⚠️ CRITICAL ZERO-TOLERANCE POLICY: NEVER PUSH TO GITHUB WITH ERRORS
+
+1. **NEVER push to GitHub with errors under any circumstance.**
+   - Do **NOT** push code to GitHub that contains syntax errors, compilation failures, unhandled exceptions, failing automated tests, broken database migrations, or invalid configuration.
+   - Every commit and push to remote repositories (`main`, `master`, or staging branches) must be verified and 100% error-free.
+2. **Mandatory Pre-Push Verification Checklist**:
+   - **Syntax Validation**: Run syntax checks on all modified PHP files: `php -l <filepath>`.
+   - **Route & Config Integrity**: Confirm routes and service providers register without errors: `php artisan route:list` and `php artisan config:show app` (or equivalent).
+   - **Database & Model Integrity**: Ensure all Eloquent relationships, schema migrations, and model properties align with MariaDB schema without syntax or column mismatch errors.
+   - **Composer & Dependency Safety**: Verify that `composer.json` requirements and PHP version constraints are satisfied (e.g. PHP 8.3 / 8.4 runtime parity).
+   - **Resolution Mandate**: If ANY error occurs during verification, **it MUST be resolved and verified clean before any `git push` command is issued**. Pushing broken code is strictly prohibited.
+
+---
+
 ## 1. Architecture, Folder Structure & Clean Code (DRY)
 
 1. **Always Follow the DRY Principle (Don't Repeat Yourself)**:

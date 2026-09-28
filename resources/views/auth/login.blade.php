@@ -67,7 +67,7 @@
             @endif
 
             <!-- Standard Credentials Login Form -->
-            <form action="{{ route('login') }}" method="POST" class="space-y-4">
+            <form action="/login" method="POST" class="space-y-4">
                 @csrf
                 <div>
                     <label for="email" class="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">
