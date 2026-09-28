@@ -8,8 +8,8 @@ COPY vite.config.js ./
 COPY public ./public
 RUN npm run build
 
-# Stage 2: Production PHP 8.3 Apache Environment
-FROM php:8.3-apache
+# Stage 2: Production PHP 8.4 Apache Environment
+FROM php:8.4-apache
 
 # Install system dependencies & PostgreSQL / SQLite / MySQL dev libraries
 RUN apt-get update && apt-get install -y \
@@ -57,7 +57,7 @@ COPY . .
 COPY --from=assets-builder /app/public/build /var/www/html/public/build
 
 # Install PHP dependencies without dev packages
-RUN composer install --no-dev --optimize-autoloader --no-interaction
+RUN composer install --no-dev --optimize-autoloader --no-interaction --ignore-platform-req=php+
 
 # Ensure storage directories exist and have proper permissions
 RUN mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views storage/app/public \
