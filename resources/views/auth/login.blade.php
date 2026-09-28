@@ -189,7 +189,7 @@
 
             <!-- Return to Customer Storefront Link -->
             <div class="text-center pt-2">
-                <a href="http://localhost:3000" class="text-xs text-stone-500 hover:text-stone-900 font-medium">
+                <a href="{{ env('FRONTEND_URL', 'http://localhost:3000') }}" class="text-xs text-stone-500 hover:text-stone-900 font-medium">
                     ← Return to Customer Web Storefront
                 </a>
             </div>

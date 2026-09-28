@@ -107,7 +107,7 @@
 
     <!-- MODAL: ADD CATEGORY -->
     <div x-show="newCatModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-950/70 backdrop-blur-xs">
-        <div @click.away="newCatModal = false" class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-stone-200 space-y-4">
+        <div @click.away="newCatModal = false" class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-stone-200 space-y-4 max-h-[90vh] overflow-y-auto my-auto">
             <div class="flex items-center justify-between pb-3 border-b border-stone-200">
                 <h3 class="text-lg font-serif font-bold text-stone-900">Add New Category</h3>
                 <button type="button" @click="newCatModal = false" class="text-stone-400 hover:text-stone-900 text-lg">✕</button>
@@ -142,7 +142,7 @@
 
     <!-- MODAL: ADD SUBCATEGORY -->
     <div x-show="newSubModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-950/70 backdrop-blur-xs">
-        <div @click.away="newSubModal = false" class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-stone-200 space-y-4">
+        <div @click.away="newSubModal = false" class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-stone-200 space-y-4 max-h-[90vh] overflow-y-auto my-auto">
             <div class="flex items-center justify-between pb-3 border-b border-stone-200">
                 <div>
                     <span class="text-[10px] font-bold text-amber-800 uppercase tracking-widest" x-text="'Parent: ' + selectedCatName"></span>

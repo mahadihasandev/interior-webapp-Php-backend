@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: interior-shop-backend
+    runtime: docker
+    plan: free
+    region: oregon
+    dockerfilePath: Dockerfile
+    dockerContext: .
+    envVars:
+      - key: APP_NAME
+        value: "L'Atelier Architectural Studio"
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_KEY
+        generateValue: true
+      - key: DB_CONNECTION
+        value: sqlite
+      - key: SESSION_DRIVER
+        value: database
+      - key: CACHE_STORE
+        value: database
+      - key: RUN_MIGRATIONS
+        value: "true"
+      - key: RUN_SEEDS
+        value: "true"

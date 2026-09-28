@@ -359,7 +359,7 @@
         <div class="flex min-h-full items-center justify-center p-4">
             <div @click="quoteModalOpen = false" class="fixed inset-0 bg-stone-900/60 backdrop-blur-sm"></div>
 
-            <div class="relative w-full max-w-xl bg-white rounded-3xl border border-stone-200 p-8 shadow-2xl space-y-6 text-stone-900">
+            <div class="relative w-full max-w-xl bg-white rounded-3xl border border-stone-200 p-5 sm:p-8 shadow-2xl space-y-6 text-stone-900 max-h-[90vh] overflow-y-auto my-auto">
                 <div class="flex justify-between items-start border-b border-stone-200 pb-4">
                     <div>
                         <h3 class="text-xl font-serif font-bold text-stone-900">Custom Fitting Engineering Quote</h3>
@@ -479,7 +479,7 @@
         <div class="flex min-h-full items-center justify-center p-4">
             <div @click="stageModalOpen = false" class="fixed inset-0 bg-stone-900/60 backdrop-blur-sm"></div>
 
-            <div class="relative w-full max-w-xl bg-white rounded-3xl border border-stone-200 p-8 shadow-2xl space-y-6 text-stone-900">
+            <div class="relative w-full max-w-xl bg-white rounded-3xl border border-stone-200 p-5 sm:p-8 shadow-2xl space-y-6 text-stone-900 max-h-[90vh] overflow-y-auto my-auto">
                 <div class="flex justify-between items-start border-b border-stone-200 pb-4">
                     <div>
                         <h3 class="text-xl font-serif font-bold text-stone-900">Advance Production Milestone</h3>

@@ -56,7 +56,7 @@
     @endif
 
     <!-- Metric KPI Stat Cards -->
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         <div class="bg-white p-5 rounded-2xl border border-stone-200 shadow-2xs">
             <div class="flex items-center justify-between text-xs font-bold text-stone-500 uppercase tracking-wider">
                 <span>Total Ready-Made Sales</span>
@@ -303,7 +303,7 @@
 
     <!-- UPDATE ORDER FULFILLMENT MODAL -->
     <div x-show="updateModalOpen" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-950/70 backdrop-blur-xs">
-        <div @click.away="updateModalOpen = false" class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-stone-200 space-y-5 animate-in zoom-in-95">
+        <div @click.away="updateModalOpen = false" class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-stone-200 space-y-5 animate-in zoom-in-95 max-h-[90vh] overflow-y-auto my-auto">
             <div class="flex items-center justify-between pb-3 border-b border-stone-200">
                 <div>
                     <span class="text-[10px] font-bold text-amber-800 uppercase tracking-widest">Order Fulfillment Stage</span>

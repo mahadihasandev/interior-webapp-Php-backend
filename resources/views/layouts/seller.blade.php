@@ -21,22 +21,22 @@
     </style>
 </head>
 <body class="h-full bg-stone-50 text-stone-900 antialiased font-sans selection:bg-amber-100 selection:text-amber-900" x-data="{ mobileMenuOpen: false }">
-    <div class="min-h-full flex flex-col md:flex-row">
-        <!-- Sidebar Navigation (Laptop md / Large Desktop lg) -->
-        <aside class="hidden md:flex flex-col w-64 lg:w-72 bg-white border-r border-stone-200 shrink-0">
-            <div class="h-20 flex items-center px-6 border-b border-stone-200">
+    <div class="min-h-full flex flex-col lg:flex-row">
+        <!-- 1. DESKTOP PERMANENT SIDEBAR (Large screens lg / xl: >= 1024px) -->
+        <aside class="hidden lg:flex flex-col w-72 bg-white border-r border-stone-200 shrink-0 min-h-screen sticky top-0 h-screen">
+            <div class="h-20 flex items-center px-6 border-b border-stone-200 justify-between">
                 <div class="flex items-center gap-3">
-                    <div class="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-800 font-serif font-bold text-lg">
+                    <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/25 flex items-center justify-center text-amber-800 font-serif font-bold text-lg shadow-2xs">
                         L
                     </div>
                     <div>
                         <span class="font-serif font-bold text-stone-900 tracking-tight text-base block">L’Atelier Studio</span>
-                        <span class="text-[10px] text-stone-400 uppercase tracking-widest font-medium">Seller Portal</span>
+                        <span class="text-[10px] text-amber-800 uppercase tracking-widest font-bold">Seller & CAD Portal</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Navigation Links -->
+            <!-- Desktop Navigation Links -->
             <nav class="flex-1 px-4 py-6 space-y-1 text-sm font-medium overflow-y-auto">
                 <div class="text-[10px] font-bold text-stone-400 uppercase tracking-widest px-3 py-1">
                     Orders & Fulfillment
@@ -77,7 +77,7 @@
                 </a>
 
                 <div class="text-[10px] font-bold text-amber-800 uppercase tracking-widest px-3 pt-5 pb-1 flex items-center gap-1.5">
-                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
                     <span>Villa Showcase · تصاميم الفلل</span>
                 </div>
 
@@ -90,10 +90,17 @@
                     <svg class="w-4 h-4 {{ request()->routeIs('seller.villa-designs.create') ? 'text-amber-400' : 'text-amber-700' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     <span>+ Add Villa Design</span>
                 </a>
+
+                <div class="pt-4 border-t border-stone-100">
+                    <a href="{{ env('FRONTEND_URL', 'http://localhost:3000') }}" target="_blank" class="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-stone-600 hover:text-stone-900 hover:bg-stone-100 transition-colors">
+                        <span>← Customer Web Storefront</span>
+                        <span class="text-[10px] text-stone-400 font-mono">3000 ↗</span>
+                    </a>
+                </div>
             </nav>
 
-            <!-- User footer profile -->
-            <div class="p-4 border-t border-stone-200 bg-stone-50/50">
+            <!-- User profile footer -->
+            <div class="p-4 border-t border-stone-200 bg-stone-50/70">
                 @auth
                     <div class="flex items-center justify-between">
                         <div class="truncate mr-2">
@@ -103,7 +110,7 @@
                                     {{ auth()->user()->role ?? 'Staff' }}
                                 </span>
                                 @if(auth()->user()->vendor)
-                                    <span class="text-[10px] text-stone-400 truncate">
+                                    <span class="text-[10px] text-stone-500 truncate">
                                         {{ auth()->user()->vendor->name }}
                                     </span>
                                 @endif
@@ -113,11 +120,11 @@
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
                         </a>
                     </div>
-                    <div class="mt-2 flex items-center justify-between text-[11px] text-stone-500 pt-2 border-t border-stone-200/60">
-                        <a href="{{ route('login') }}" class="hover:text-stone-900 font-medium">Switch Account</a>
+                    <div class="mt-2.5 flex items-center justify-between text-[11px] text-stone-500 pt-2 border-t border-stone-200">
+                        <a href="{{ route('login') }}" class="hover:text-stone-900 font-medium">Switch Role</a>
                         <form method="POST" action="{{ route('logout') }}" class="inline">
                             @csrf
-                            <button type="submit" class="hover:text-rose-600 font-medium">Sign Out</button>
+                            <button type="submit" class="hover:text-rose-600 font-bold cursor-pointer">Sign Out</button>
                         </form>
                     </div>
                 @else
@@ -126,7 +133,7 @@
                             <p class="text-xs font-bold text-stone-900">Demo Guest View</p>
                             <p class="text-[10px] text-stone-500">All vendors preview</p>
                         </div>
-                        <a href="{{ route('login') }}" class="px-2.5 py-1 bg-stone-900 text-white rounded-lg text-xs font-semibold hover:bg-stone-800 transition-colors">
+                        <a href="{{ route('login') }}" class="px-3 py-1.5 bg-stone-900 text-white rounded-xl text-xs font-bold hover:bg-stone-800 transition-colors">
                             Sign In
                         </a>
                     </div>
@@ -134,64 +141,179 @@
             </div>
         </aside>
 
-        <!-- Mobile Header Bar (Smartphone sm) -->
-        <header class="md:hidden bg-white border-b border-stone-200 px-4 py-3 flex items-center justify-between">
-            <div class="flex items-center gap-2">
-                <div class="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-800 font-serif font-bold">
-                    L
-                </div>
-                <div>
-                    <span class="font-serif font-bold text-stone-900 text-sm">L’Atelier Studio</span>
-                    @auth
-                        <span class="text-[10px] text-stone-500 block -mt-0.5">{{ auth()->user()->name }} ({{ auth()->user()->role }})</span>
-                    @endauth
-                </div>
-            </div>
-            <div class="flex items-center gap-2">
-                @auth
-                    <a href="{{ route('login') }}" class="text-[11px] text-stone-500 hover:text-stone-900 font-medium">Switch</a>
-                @else
-                    <a href="{{ route('login') }}" class="text-[11px] text-stone-900 font-bold">Sign In</a>
-                @endauth
-                <button @click="mobileMenuOpen = !mobileMenuOpen" class="p-2 text-stone-600 hover:text-stone-900 rounded-lg">
+        <!-- 2. TABLET & MOBILE TOP HEADER BAR (Screens < 1024px: md & sm) -->
+        <header class="lg:hidden sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-stone-200 px-4 sm:px-6 py-3 flex items-center justify-between shadow-2xs">
+            <div class="flex items-center gap-3">
+                <button @click="mobileMenuOpen = true" class="p-2 -ml-2 text-stone-700 hover:text-stone-900 hover:bg-stone-100 rounded-xl transition-colors cursor-pointer" aria-label="Open Navigation Menu">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
                 </button>
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/25 flex items-center justify-center text-amber-800 font-serif font-bold text-sm shadow-2xs">
+                        L
+                    </div>
+                    <div>
+                        <span class="font-serif font-bold text-stone-900 text-sm leading-tight block">L’Atelier Studio</span>
+                        <span class="text-[10px] text-stone-500 font-sans">Seller Portal</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <a href="{{ env('FRONTEND_URL', 'http://localhost:3000') }}" target="_blank" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold text-stone-700 hover:text-stone-900 bg-stone-100 hover:bg-stone-200 border border-stone-200 transition-colors">
+                    <span>Storefront ↗</span>
+                </a>
+                @auth
+                    <div class="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-50 border border-amber-200 text-[10px] font-bold text-amber-900">
+                        <span>{{ auth()->user()->role ?? 'Staff' }}</span>
+                    </div>
+                    <form method="POST" action="{{ route('logout') }}" class="inline">
+                        @csrf
+                        <button type="submit" class="p-1.5 text-stone-500 hover:text-rose-600 hover:bg-stone-100 rounded-lg text-xs font-medium cursor-pointer" title="Sign Out">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                        </button>
+                    </form>
+                @else
+                    <a href="{{ route('login') }}" class="px-3 py-1.5 bg-stone-900 text-white rounded-xl text-xs font-bold hover:bg-stone-800 transition-colors">
+                        Sign In
+                    </a>
+                @endauth
             </div>
         </header>
 
-        <!-- Mobile Drawer -->
-        <div x-show="mobileMenuOpen" x-cloak class="md:hidden bg-white border-b border-stone-200 p-4 space-y-1 text-sm font-medium">
-            <a href="{{ route('seller.orders.ready_made') }}" class="block px-3 py-2 rounded-lg {{ request()->routeIs('seller.orders.ready_made*') ? 'bg-stone-900 text-white font-bold' : 'text-stone-700 hover:bg-stone-100' }}">📦 Ready-Made Sales</a>
-            <a href="{{ route('seller.orders.index') }}" class="block px-3 py-2 rounded-lg {{ request()->routeIs('seller.orders.index') ? 'bg-stone-900 text-white font-bold' : 'text-stone-700 hover:bg-stone-100' }}">🏗️ Custom Orders & Quotes</a>
-            <a href="{{ route('seller.products.index') }}" class="block px-3 py-2 rounded-lg {{ request()->routeIs('seller.products.*') ? 'bg-stone-900 text-white font-bold' : 'text-stone-700 hover:bg-stone-100' }}">🪑 Product Catalog</a>
-            <a href="{{ route('seller.products.create') }}" class="block px-3 py-2 rounded-lg text-stone-700 hover:bg-stone-100">➕ Add New Product</a>
-            <a href="{{ route('seller.categories.index') }}" class="block px-3 py-2 rounded-lg {{ request()->routeIs('seller.categories.*') ? 'bg-stone-900 text-white font-bold' : 'text-stone-700 hover:bg-stone-100' }}">🏷️ Categories & Subs</a>
-            <a href="{{ route('seller.brands.index') }}" class="block px-3 py-2 rounded-lg {{ request()->routeIs('seller.brands.*') ? 'bg-stone-900 text-white font-bold' : 'text-stone-700 hover:bg-stone-100' }}">🏢 Brands & Studios</a>
-            <a href="{{ route('seller.villa-designs.index') }}" class="block px-3 py-2 rounded-lg {{ request()->routeIs('seller.villa-designs.*') ? 'bg-amber-900 text-white font-bold' : 'text-amber-900 bg-amber-50/70 hover:bg-amber-100' }}">🏰 Villa Designs Showcase (تصاميم الفلل)</a>
-            <a href="{{ route('seller.villa-designs.create') }}" class="block px-3 py-2 rounded-lg text-amber-900 hover:bg-amber-100">➕ Add Villa Design</a>
-            <a href="{{ route('login') }}" class="block px-3 py-2 text-xs text-amber-900 font-bold hover:bg-amber-50 rounded-lg">Demo Role Switcher</a>
+        <!-- 3. MOBILE & TABLET SLIDE-OVER DRAWER (Off-canvas, Smooth Animated) -->
+        <!-- Backdrop -->
+        <div x-show="mobileMenuOpen" 
+             x-cloak 
+             @click="mobileMenuOpen = false" 
+             class="fixed inset-0 bg-stone-950/60 backdrop-blur-xs z-40 lg:hidden transition-opacity duration-300">
         </div>
 
-        <!-- Main Workspace (Responsive sm, md, lg) -->
-        <main class="flex-1 flex flex-col overflow-y-auto">
+        <!-- Slide-over Drawer Panel -->
+        <aside x-show="mobileMenuOpen" 
+               x-cloak 
+               class="fixed inset-y-0 left-0 w-80 max-w-[85vw] bg-white z-50 shadow-2xl flex flex-col justify-between lg:hidden border-r border-stone-200 overflow-y-auto animate-in slide-in-from-left duration-300">
+            <div>
+                <!-- Drawer Top Header -->
+                <div class="h-16 flex items-center justify-between px-5 border-b border-stone-200 bg-stone-50">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/25 flex items-center justify-center text-amber-800 font-serif font-bold text-sm">
+                            L
+                        </div>
+                        <div>
+                            <span class="font-serif font-bold text-stone-900 text-sm block">L’Atelier Studio</span>
+                            <span class="text-[9px] text-stone-500 font-medium uppercase tracking-wider">Navigation Menu</span>
+                        </div>
+                    </div>
+                    <button @click="mobileMenuOpen = false" class="p-2 text-stone-500 hover:text-stone-900 hover:bg-stone-200/50 rounded-lg cursor-pointer text-lg font-bold">
+                        ✕
+                    </button>
+                </div>
+
+                <!-- Navigation List inside Drawer -->
+                <div class="p-4 space-y-1 text-sm font-medium">
+                    <div class="text-[10px] font-bold text-stone-400 uppercase tracking-widest px-3 py-1.5">
+                        Orders & Fulfillment
+                    </div>
+                    <a href="{{ route('seller.orders.ready_made') }}" @click="mobileMenuOpen = false" class="flex items-center gap-3 px-3 py-2.5 rounded-xl {{ request()->routeIs('seller.orders.ready_made*') ? 'bg-stone-900 text-white font-bold' : 'text-stone-700 hover:bg-stone-100' }}">
+                        <span>📦</span>
+                        <span>Ready-Made Sales List</span>
+                    </a>
+                    <a href="{{ route('seller.orders.index') }}" @click="mobileMenuOpen = false" class="flex items-center gap-3 px-3 py-2.5 rounded-xl {{ request()->routeIs('seller.orders.index') ? 'bg-stone-900 text-white font-bold' : 'text-stone-700 hover:bg-stone-100' }}">
+                        <span>🏗️</span>
+                        <span>Custom Orders & Quotes</span>
+                    </a>
+
+                    <div class="text-[10px] font-bold text-stone-400 uppercase tracking-widest px-3 pt-4 pb-1.5">
+                        Catalog Management
+                    </div>
+                    <a href="{{ route('seller.products.index') }}" @click="mobileMenuOpen = false" class="flex items-center gap-3 px-3 py-2.5 rounded-xl {{ request()->routeIs('seller.products.index') || request()->routeIs('seller.products.edit') ? 'bg-stone-900 text-white font-bold' : 'text-stone-700 hover:bg-stone-100' }}">
+                        <span>🪑</span>
+                        <span>Product Catalog</span>
+                    </a>
+                    <a href="{{ route('seller.products.create') }}" @click="mobileMenuOpen = false" class="flex items-center gap-3 px-3 py-2.5 rounded-xl {{ request()->routeIs('seller.products.create') ? 'bg-stone-900 text-white font-bold' : 'text-stone-700 hover:bg-stone-100' }}">
+                        <span>➕</span>
+                        <span>Add New Product</span>
+                    </a>
+                    <a href="{{ route('seller.categories.index') }}" @click="mobileMenuOpen = false" class="flex items-center gap-3 px-3 py-2.5 rounded-xl {{ request()->routeIs('seller.categories.*') ? 'bg-stone-900 text-white font-bold' : 'text-stone-700 hover:bg-stone-100' }}">
+                        <span>🏷️</span>
+                        <span>Categories & Subs</span>
+                    </a>
+                    <a href="{{ route('seller.brands.index') }}" @click="mobileMenuOpen = false" class="flex items-center gap-3 px-3 py-2.5 rounded-xl {{ request()->routeIs('seller.brands.*') ? 'bg-stone-900 text-white font-bold' : 'text-stone-700 hover:bg-stone-100' }}">
+                        <span>🏢</span>
+                        <span>Brands & Studios</span>
+                    </a>
+
+                    <div class="text-[10px] font-bold text-amber-800 uppercase tracking-widest px-3 pt-4 pb-1.5 flex items-center gap-1.5">
+                        <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                        <span>Villa Showcase · تصاميم الفلل</span>
+                    </div>
+                    <a href="{{ route('seller.villa-designs.index') }}" @click="mobileMenuOpen = false" class="flex items-center gap-3 px-3 py-2.5 rounded-xl {{ request()->routeIs('seller.villa-designs.index') || request()->routeIs('seller.villa-designs.edit') ? 'bg-amber-950 text-amber-100 font-bold' : 'text-amber-950 bg-amber-50/70 hover:bg-amber-100' }}">
+                        <span>🏰</span>
+                        <span>Villa Designs Showcase</span>
+                    </a>
+                    <a href="{{ route('seller.villa-designs.create') }}" @click="mobileMenuOpen = false" class="flex items-center gap-3 px-3 py-2.5 rounded-xl {{ request()->routeIs('seller.villa-designs.create') ? 'bg-amber-950 text-amber-100 font-bold' : 'text-stone-700 hover:bg-stone-100' }}">
+                        <span>➕</span>
+                        <span>Add Villa Design</span>
+                    </a>
+
+                    <div class="pt-3 border-t border-stone-100 space-y-1">
+                        <a href="{{ env('FRONTEND_URL', 'http://localhost:3000') }}" target="_blank" class="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold text-stone-800 bg-stone-100 hover:bg-stone-200">
+                            <span>← Visit Web Storefront</span>
+                            <span class="font-mono text-[10px] text-stone-500">3000 ↗</span>
+                        </a>
+                        <a href="{{ route('login') }}" class="block px-3 py-2 text-xs font-bold text-amber-900 hover:bg-amber-50 rounded-xl">
+                            Demo Role Switcher
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Drawer Bottom User Profile & Sign Out -->
+            <div class="p-4 border-t border-stone-200 bg-stone-50">
+                @auth
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="truncate mr-2">
+                            <p class="text-xs font-bold text-stone-900 truncate">{{ auth()->user()->name }}</p>
+                            <p class="text-[10px] text-stone-500 truncate">{{ auth()->user()->email }}</p>
+                            <span class="inline-block mt-1 px-1.5 py-0.5 text-[9px] font-bold rounded bg-amber-100 text-amber-900 border border-amber-200 uppercase">
+                                {{ auth()->user()->role ?? 'Staff' }}
+                            </span>
+                        </div>
+                    </div>
+                    <form method="POST" action="{{ route('logout') }}" class="block">
+                        @csrf
+                        <button type="submit" class="w-full py-2.5 px-3 bg-stone-900 hover:bg-stone-800 text-white rounded-xl text-xs font-bold transition-colors cursor-pointer text-center">
+                            Sign Out of Studio
+                        </button>
+                    </form>
+                @else
+                    <a href="{{ route('login') }}" class="w-full block py-2.5 px-3 bg-stone-900 hover:bg-stone-800 text-white rounded-xl text-xs font-bold transition-colors text-center">
+                        Sign In
+                    </a>
+                @endauth
+            </div>
+        </aside>
+
+        <!-- 4. MAIN WORKSPACE (Fully Responsive across Small, Medium, Large) -->
+        <main class="flex-1 flex flex-col overflow-y-auto min-w-0">
             <!-- Flash Notification -->
             @if(session('success'))
-                <div class="m-4 md:m-6 p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-medium flex items-center justify-between shadow-sm">
+                <div class="m-3 sm:m-4 md:m-6 p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs font-medium flex items-center justify-between shadow-2xs">
                     <div class="flex items-center gap-2">
-                        <span class="font-bold">✓</span>
+                        <span class="font-bold text-emerald-700">✓</span>
                         <span>{{ session('success') }}</span>
                     </div>
                 </div>
             @endif
 
             @if(session('info'))
-                <div class="m-4 md:m-6 p-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs font-medium flex items-center gap-2 shadow-sm">
+                <div class="m-3 sm:m-4 md:m-6 p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-xs font-medium flex items-center gap-2 shadow-2xs">
                     <span>ℹ</span>
                     <span>{{ session('info') }}</span>
                 </div>
             @endif
 
-            <div class="p-4 sm:p-6 md:p-8 lg:p-10 space-y-8 flex-1">
+            <div class="p-3 sm:p-5 md:p-6 lg:p-8 xl:p-10 space-y-6 sm:space-y-8 flex-1 min-w-0">
                 @yield('content')
             </div>
         </main>
