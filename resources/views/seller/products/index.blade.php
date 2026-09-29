@@ -17,14 +17,18 @@
             </p>
         </div>
 
-        <div class="flex items-center gap-3 shrink-0">
+        <div class="flex items-center gap-2.5 shrink-0 flex-wrap">
             <a href="{{ route('seller.products.create') }}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-stone-900 hover:bg-stone-800 text-white text-xs font-bold uppercase tracking-wider transition-colors shadow-xs">
                 <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                <span>Add New Product</span>
+                <span>Add Product</span>
             </a>
-            <a href="{{ route('seller.orders.ready_made') }}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-stone-300 hover:bg-stone-50 text-stone-800 text-xs font-bold uppercase tracking-wider transition-colors">
+            <a href="{{ route('seller.products.create_custom') }}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-amber-800 hover:bg-amber-900 text-white text-xs font-bold uppercase tracking-wider transition-colors shadow-xs">
+                <svg class="w-4 h-4 text-amber-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z"/></svg>
+                <span>+ Add Custom Order</span>
+            </a>
+            <a href="{{ route('seller.orders.ready_made') }}" class="inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-white border border-stone-300 hover:bg-stone-50 text-stone-800 text-xs font-bold uppercase tracking-wider transition-colors">
                 <svg class="w-4 h-4 text-stone-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
-                <span>Ready-Made Sales List</span>
+                <span class="hidden sm:inline">Sales List</span>
             </a>
         </div>
     </div>
@@ -48,8 +52,15 @@
                 <svg class="w-4 h-4 text-stone-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
             </div>
 
+            <!-- Type filter -->
+            <select name="product_type" class="px-3 py-1.5 text-xs bg-stone-50 border border-stone-300 rounded-xl font-medium" onchange="this.form.submit()">
+                <option value="">All Catalog Types</option>
+                <option value="custom_fit" {{ ($productType ?? '') === 'custom_fit' ? 'selected' : '' }}>🪟 Custom Orders Only</option>
+                <option value="ready_made" {{ ($productType ?? '') === 'ready_made' ? 'selected' : '' }}>📦 Ready-Made Only</option>
+            </select>
+
             <!-- Category filter -->
-            <select name="category_id" class="px-3 py-1.5 text-xs bg-stone-50 border border-stone-300 rounded-xl">
+            <select name="category_id" class="px-3 py-1.5 text-xs bg-stone-50 border border-stone-300 rounded-xl" onchange="this.form.submit()">
                 <option value="">All Categories</option>
                 @foreach($categories as $cat)
                     <option value="{{ $cat->id }}" {{ $categoryId == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
@@ -57,7 +68,7 @@
             </select>
 
             <!-- Brand filter -->
-            <select name="brand_id" class="px-3 py-1.5 text-xs bg-stone-50 border border-stone-300 rounded-xl">
+            <select name="brand_id" class="px-3 py-1.5 text-xs bg-stone-50 border border-stone-300 rounded-xl" onchange="this.form.submit()">
                 <option value="">All Brands & Studios</option>
                 @foreach($brands as $b)
                     <option value="{{ $b->id }}" {{ $brandId == $b->id ? 'selected' : '' }}>{{ $b->name }}</option>

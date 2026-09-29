@@ -66,6 +66,12 @@
                     <span>Add New Product</span>
                 </a>
 
+                <a href="{{ route('seller.products.create_custom') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors {{ request()->routeIs('seller.products.create_custom') ? 'bg-amber-900 text-amber-50 shadow-xs font-semibold' : 'text-amber-900 bg-amber-50/70 hover:bg-amber-100 hover:text-amber-950' }}">
+                    <svg class="w-4 h-4 {{ request()->routeIs('seller.products.create_custom') ? 'text-amber-200' : 'text-amber-700' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z"/></svg>
+                    <span class="font-bold">Add Custom Order</span>
+                    <span class="ml-auto text-[9px] font-bold px-1.5 py-0.5 rounded bg-amber-200/80 text-amber-950 uppercase tracking-wider">Custom</span>
+                </a>
+
                 <a href="{{ route('seller.categories.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors {{ request()->routeIs('seller.categories.*') ? 'bg-stone-900 text-white shadow-xs font-semibold' : 'text-stone-700 hover:text-stone-900 hover:bg-stone-100' }}">
                     <svg class="w-4 h-4 {{ request()->routeIs('seller.categories.*') ? 'text-white' : 'text-stone-500' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg>
                     <span>Categories & Subs</span>
@@ -233,6 +239,10 @@
                     <a href="{{ route('seller.products.create') }}" @click="mobileMenuOpen = false" class="flex items-center gap-3 px-3 py-2.5 rounded-xl {{ request()->routeIs('seller.products.create') ? 'bg-stone-900 text-white font-bold' : 'text-stone-700 hover:bg-stone-100' }}">
                         <span>➕</span>
                         <span>Add New Product</span>
+                    </a>
+                    <a href="{{ route('seller.products.create_custom') }}" @click="mobileMenuOpen = false" class="flex items-center gap-3 px-3 py-2.5 rounded-xl {{ request()->routeIs('seller.products.create_custom') ? 'bg-amber-900 text-white font-bold' : 'text-amber-900 bg-amber-50/70 hover:bg-amber-100' }}">
+                        <span>🪟</span>
+                        <span class="font-bold">Add Custom Order</span>
                     </a>
                     <a href="{{ route('seller.categories.index') }}" @click="mobileMenuOpen = false" class="flex items-center gap-3 px-3 py-2.5 rounded-xl {{ request()->routeIs('seller.categories.*') ? 'bg-stone-900 text-white font-bold' : 'text-stone-700 hover:bg-stone-100' }}">
                         <span>🏷️</span>

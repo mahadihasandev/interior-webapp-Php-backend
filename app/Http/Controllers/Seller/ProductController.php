@@ -19,6 +19,7 @@ class ProductController extends Controller
         $search = $request->query('search', '');
         $categoryId = $request->query('category_id', '');
         $brandId = $request->query('brand_id', '');
+        $productType = $request->query('product_type', '');
 
         $query = Product::with(['category', 'subcategory', 'brand'])->latest();
 
@@ -39,11 +40,15 @@ class ProductController extends Controller
             $query->where('brand_id', $brandId);
         }
 
+        if (!empty($productType)) {
+            $query->where('product_type', $productType);
+        }
+
         $products = $query->paginate(12)->withQueryString();
         $categories = Category::with('subcategories')->get();
         $brands = Brand::all();
 
-        return view('seller.products.index', compact('products', 'categories', 'brands', 'search', 'categoryId', 'brandId'));
+        return view('seller.products.index', compact('products', 'categories', 'brands', 'search', 'categoryId', 'brandId', 'productType'));
     }
 
     public function create()
@@ -53,6 +58,15 @@ class ProductController extends Controller
         $subcategories = Subcategory::all();
 
         return view('seller.products.create', compact('categories', 'brands', 'subcategories'));
+    }
+
+    public function createCustom()
+    {
+        $categories = Category::with('subcategories')->get();
+        $brands = Brand::all();
+        $subcategories = Subcategory::all();
+
+        return view('seller.products.create_custom', compact('categories', 'brands', 'subcategories'));
     }
 
     public function store(Request $request)
