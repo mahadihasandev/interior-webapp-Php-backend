@@ -23,6 +23,7 @@ class ProductController extends Controller
             'category',
             'search',
             'featured',
+            'product_type',
             'min_price',
             'max_price',
             'sort',

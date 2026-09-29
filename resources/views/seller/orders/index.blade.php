@@ -186,16 +186,16 @@
                                         </span>
                                     </div>
                                     <div class="text-[11px] text-stone-700 mt-1 font-mono">
-                                        {{ $order->dimensions['height'] ?? '96' }}"H × {{ $order->dimensions['width'] ?? '72' }}"W · {{ $order->material_specs['profile_gauge'] ?? '2.0mm' }}
+                                        {{ $order->dimensions['height'] ?? '96' }}{{ isset($order->dimensions['unit']) ? ' ' . $order->dimensions['unit'] : '"' }}H × {{ $order->dimensions['width'] ?? '72' }}{{ isset($order->dimensions['unit']) ? ' ' . $order->dimensions['unit'] : '"' }}W · {{ $order->material_specs['aluminum_profile'] ?? ($order->material_specs['profile_gauge'] ?? '2.0mm') }}
                                     </div>
                                 </td>
 
                                 <!-- Col 3: Quoted Total & Advance Status -->
                                 <td class="px-6 py-4">
                                     @if($order->quoted_total_price)
-                                        <div class="font-bold text-stone-900 text-sm font-mono">${{ number_format($order->quoted_total_price, 2) }}</div>
+                                        <div class="font-bold text-stone-900 text-sm font-mono">{{ number_format($order->quoted_total_price, 0) }} SAR</div>
                                         <div class="text-[11px] text-stone-700 mt-0.5">
-                                            Req. Advance: <span class="font-bold text-stone-900 font-mono">${{ number_format($order->advance_amount_required, 2) }}</span>
+                                            Req. Advance: <span class="font-bold text-stone-900 font-mono">{{ number_format($order->advance_amount_required, 0) }} SAR</span>
                                         </div>
                                         @if($order->advance_paid_at)
                                             <span class="inline-flex px-2 py-0.5 text-[10px] font-bold rounded-md bg-emerald-100 text-emerald-900 border border-emerald-300 mt-1">
@@ -304,10 +304,10 @@
                                 <span class="w-3 h-3 rounded-full border border-stone-400" style="background-color: {{ $hex }}"></span>
                                 <span class="font-bold text-stone-900">{{ $order->color_finish }}</span>
                             </div>
-                            <p class="text-stone-700">Dimensions: {{ $order->dimensions['height'] ?? '96' }}"H × {{ $order->dimensions['width'] ?? '72' }}"W</p>
+                            <p class="text-stone-700">Dimensions: {{ $order->dimensions['height'] ?? '96' }}{{ isset($order->dimensions['unit']) ? ' ' . $order->dimensions['unit'] : '"' }}H × {{ $order->dimensions['width'] ?? '72' }}{{ isset($order->dimensions['unit']) ? ' ' . $order->dimensions['unit'] : '"' }}W</p>
                             <p class="font-bold text-stone-900 pt-1 font-mono">
-                                Total: ${{ number_format($order->quoted_total_price ?? 0, 2) }}
-                                (Advance: ${{ number_format($order->advance_amount_required ?? 0, 2) }})
+                                Total: {{ number_format($order->quoted_total_price ?? 0, 0) }} SAR
+                                (Advance: {{ number_format($order->advance_amount_required ?? 0, 0) }} SAR)
                             </p>
                         </div>
 
@@ -393,7 +393,7 @@
                     @csrf
                     <div>
                         <label class="block font-bold uppercase tracking-wider text-stone-800 mb-1">
-                            Total Quoted Price ($ USD) *
+                            Total Quoted Price (SAR / ريال) *
                         </label>
                         <input
                             type="number"
@@ -410,7 +410,7 @@
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block font-bold uppercase tracking-wider text-stone-800 mb-1">
-                                Required Advance ($ USD) *
+                                Required Advance (SAR / ريال) *
                             </label>
                             <input
                                 type="number"

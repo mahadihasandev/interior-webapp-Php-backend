@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\CustomOrder;
 use App\Models\OrderTimelineEvent;
+use App\Models\User;
 use App\Models\Vendor;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -41,7 +42,7 @@ class MobileCustomOrderController extends Controller
                 'area_sqft' => round($sqft, 2),
                 'estimated_total' => $estimatedTotal,
                 'suggested_advance' => $suggestedAdvance,
-                'currency' => 'USD',
+                'currency' => 'SAR',
             ],
         ]);
     }
@@ -59,33 +60,70 @@ class MobileCustomOrderController extends Controller
             'addon_features' => ['nullable', 'array'],
             'customer_notes' => ['nullable', 'string'],
             'vendor_id' => ['nullable', 'exists:vendors,id'],
+            'product_id' => ['nullable', 'exists:products,id'],
+            'quoted_total_price' => ['nullable', 'numeric', 'min:0'],
+            'advance_amount_required' => ['nullable', 'numeric', 'min:0'],
         ]);
 
-        // Default to first active vendor if unassigned
-        $vendorId = $validated['vendor_id'] ?? Vendor::first()?->id;
+        // Default to first active vendor if unassigned, or create default atelier vendor
+        $vendor = Vendor::first();
+        if (!$vendor) {
+            $vendor = Vendor::create([
+                'name' => "L'Atelier Custom Studio",
+                'slug' => 'atelier-custom-studio',
+                'contact_email' => 'studio@atelier.design',
+                'phone' => '+966501234567',
+                'city' => 'Riyadh',
+                'address' => 'Al-Kharj Industrial District',
+                'commission_rate' => 10.0,
+                'status' => 'active',
+            ]);
+        }
 
-        $order = DB::transaction(function () use ($validated, $vendorId, $request) {
+        $productId = $validated['product_id'] ?? null;
+        $product = $productId ? \App\Models\Product::find($productId) : null;
+        $vendorId = $validated['vendor_id'] ?? ($product?->vendor_id ?? $vendor->id);
+
+        $user = $request->user() ?: (User::where('role', 'Customer')->first() ?: User::first());
+        if (!$user) {
+            $user = User::create([
+                'name' => 'Demo Customer',
+                'email' => 'customer@atelier.design',
+                'password' => bcrypt('password123'),
+                'role' => 'Customer',
+            ]);
+        }
+        $customerId = $user->id;
+
+        $order = DB::transaction(function () use ($validated, $vendorId, $customerId, $productId, $request) {
             $orderNumber = 'CUST-' . strtoupper(date('Y')) . '-' . strtoupper(Str::random(6));
 
             $customOrder = CustomOrder::create([
                 'order_number' => $orderNumber,
-                'customer_id' => $request->user()?->id ?? 1, // Fallback demo user
+                'customer_id' => $customerId,
                 'vendor_id' => $vendorId,
+                'product_id' => $productId,
                 'title' => $validated['title'],
                 'dimensions' => $validated['dimensions'],
                 'material_specs' => $validated['material_specs'],
                 'color_finish' => $validated['color_finish'],
                 'addon_features' => $validated['addon_features'] ?? [],
                 'customer_notes' => $validated['customer_notes'] ?? null,
+                'quoted_total_price' => $validated['quoted_total_price'] ?? null,
+                'advance_amount_required' => $validated['advance_amount_required'] ?? null,
                 'current_stage' => 'order_placed',
                 'status' => 'pending_review',
             ]);
+
+            $quotedNote = !empty($validated['quoted_total_price'])
+                ? " Buyer specified quote: " . number_format($validated['quoted_total_price'], 2) . " SAR."
+                : '';
 
             OrderTimelineEvent::create([
                 'custom_order_id' => $customOrder->id,
                 'stage' => 'order_placed',
                 'title' => 'Custom Fitting Specification Submitted',
-                'description' => 'Customer submitted custom requirements. Engineering team assessing structural feasibility.',
+                'description' => 'Customer submitted custom requirements.' . $quotedNote . ' Engineering team assessing structural feasibility.',
                 'updated_by' => $request->user()?->id,
             ]);
 
@@ -95,7 +133,7 @@ class MobileCustomOrderController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Custom order submitted for vendor feasibility review.',
-            'data' => $order->load('timelineEvents'),
+            'data' => $order->load(['timelineEvents', 'product', 'vendor']),
         ], 201);
     }
 

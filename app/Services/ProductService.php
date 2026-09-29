@@ -36,6 +36,10 @@ class ProductService
             $query->where('is_featured', true);
         }
 
+        if (!empty($filters['product_type'])) {
+            $query->where('product_type', $filters['product_type']);
+        }
+
         if (!empty($filters['min_price'])) {
             $query->where('price', '>=', (float) $filters['min_price']);
         }

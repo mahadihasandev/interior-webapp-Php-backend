@@ -39,7 +39,13 @@
             reader.onload = (e) => { this.galleryPreviews.push(e.target.result); };
             reader.readAsDataURL(files[i]);
         }
-    }
+    },
+    productType: '{{ old('product_type', $product->product_type ?? 'ready_made') }}',
+    minPrice: '{{ old('min_price', $product->customization_options['min_price'] ?? $product->price) }}',
+    maxPrice: '{{ old('max_price', $product->customization_options['max_price'] ?? ($product->compare_at_price ?? $product->price)) }}',
+    defaultHeight: '{{ old('default_height', $product->customization_options['default_height'] ?? 180) }}',
+    defaultWidth: '{{ old('default_width', $product->customization_options['default_width'] ?? 140) }}',
+    measurementUnit: '{{ old('measurement_unit', $product->customization_options['measurement_unit'] ?? 'cm') }}'
 }">
 
     {{-- Top Header --}}
@@ -267,17 +273,45 @@
         </div>
 
         {{-- ═══════════════════════════
-             SECTION 3 — Pricing
+             PRODUCT TYPE SELECTOR
+        ════════════════════════════ --}}
+        <div class="bg-amber-50/60 rounded-3xl border border-amber-200/80 p-5 sm:p-6 shadow-sm">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-wider text-amber-900 block">Catalog Mode · نوع المنتج</span>
+                    <p class="text-xs text-stone-600 mt-0.5">Select whether this is a ready-made item or a custom-made architectural order with customer specifications.</p>
+                </div>
+                <div class="flex items-center p-1 bg-white border border-stone-200 rounded-2xl gap-1 shrink-0">
+                    <button type="button" @click="productType = 'ready_made'"
+                        :class="productType === 'ready_made' ? 'bg-stone-900 text-white shadow-sm' : 'text-stone-600 hover:text-stone-900'"
+                        class="px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5">
+                        📦 Ready-Made Edition
+                    </button>
+                    <button type="button" @click="productType = 'custom_fit'"
+                        :class="productType === 'custom_fit' ? 'bg-amber-800 text-white shadow-sm' : 'text-stone-600 hover:text-stone-900'"
+                        class="px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5">
+                        🪟 Bespoke Made-to-Measure
+                    </button>
+                </div>
+                <input type="hidden" name="product_type" :value="productType">
+            </div>
+        </div>
+
+        {{-- ═══════════════════════════
+             SECTION 3 — Pricing & Range
         ════════════════════════════ --}}
         <div class="bg-white rounded-3xl border border-stone-200 p-6 sm:p-8 shadow-sm space-y-4">
             <h2 class="text-sm font-bold uppercase tracking-wider text-stone-900 flex items-center gap-2">
                 <span class="w-6 h-6 rounded-full bg-stone-900 text-white text-xs flex items-center justify-center font-bold">3</span>
-                Pricing & Inventory · الأسعار والمخزون
+                <span x-text="productType === 'custom_fit' ? 'Price Range & Order Capacity (e.g. 800 to 1000 SAR)' : 'Pricing & Inventory · الأسعار والمخزون'"></span>
             </h2>
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-stone-600 mb-1">Retail Price (SAR) <span class="text-rose-500">*</span></label>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-stone-600 mb-1">
+                        <span x-text="productType === 'custom_fit' ? 'Min Price / Starting (SAR)' : 'Retail Price (SAR)'"></span>
+                        <span class="text-rose-500">*</span>
+                    </label>
                     <div class="relative">
                         <span class="absolute left-3 top-2.5 text-sm text-stone-500 font-bold">﷼</span>
                         <input type="number" step="0.01" name="price" x-model="price" required
@@ -285,7 +319,9 @@
                     </div>
                 </div>
                 <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-stone-600 mb-1">Compare At (SAR)</label>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-stone-600 mb-1">
+                        <span x-text="productType === 'custom_fit' ? 'Max Price Range (SAR)' : 'Compare At (SAR)'"></span>
+                    </label>
                     <div class="relative">
                         <span class="absolute left-3 top-2.5 text-sm text-stone-500 font-bold">﷼</span>
                         <input type="number" step="0.01" name="compare_at_price" x-model="comparePrice"
@@ -296,6 +332,56 @@
                     <label class="block text-xs font-bold uppercase tracking-wider text-stone-600 mb-1">Stock Units <span class="text-rose-500">*</span></label>
                     <input type="number" name="stock" x-model="stock" required min="0"
                         class="w-full px-3.5 py-2.5 text-sm bg-stone-50 border border-stone-300 rounded-xl focus:ring-2 focus:ring-stone-900 focus:outline-none">
+                </div>
+            </div>
+        </div>
+
+        {{-- ═══════════════════════════
+             SECTION 3B — Made-to-Measure Custom Specifications
+        ════════════════════════════ --}}
+        <div x-show="productType === 'custom_fit'" x-transition class="bg-white rounded-3xl border-2 border-amber-300/80 p-6 sm:p-8 shadow-sm space-y-6">
+            <div class="flex items-center justify-between pb-3 border-b border-stone-200">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-wider text-amber-800 flex items-center gap-1.5">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z"/></svg>
+                        Customer Specification Form Settings
+                    </span>
+                    <h3 class="text-lg font-serif font-bold text-stone-900">Custom Order Parameters</h3>
+                    <p class="text-xs text-stone-500">Configure default dimensions, shutters count, aluminum profiles, and glass colors that customer can choose on the custom details page.</p>
+                </div>
+                <span class="px-3 py-1 bg-amber-100 text-amber-900 text-[11px] font-bold rounded-full">Interactive Customizer</span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-stone-600 mb-1">Default Height</label>
+                    <input type="number" name="default_height" x-model="defaultHeight" placeholder="180"
+                        class="w-full px-3.5 py-2.5 text-sm bg-stone-50 border border-stone-300 rounded-xl focus:ring-2 focus:ring-amber-800 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-stone-600 mb-1">Default Width</label>
+                    <input type="number" name="default_width" x-model="defaultWidth" placeholder="140"
+                        class="w-full px-3.5 py-2.5 text-sm bg-stone-50 border border-stone-300 rounded-xl focus:ring-2 focus:ring-amber-800 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-stone-600 mb-1">Measurement Unit</label>
+                    <select name="measurement_unit" x-model="measurementUnit"
+                        class="w-full px-3.5 py-2.5 text-sm bg-stone-50 border border-stone-300 rounded-xl focus:ring-2 focus:ring-amber-800 focus:outline-none font-bold">
+                        <option value="cm">Centimeters (cm)</option>
+                        <option value="mm">Millimeters (mm)</option>
+                        <option value="inch">Inches (in)</option>
+                    </select>
+                </div>
+            </div>
+
+            {{-- Specification Options Preview Badges --}}
+            <div class="p-4 rounded-2xl bg-stone-50 border border-stone-200 space-y-3">
+                <span class="text-xs font-bold text-stone-700 block">Default Options Enabled for Customer Form:</span>
+                <div class="flex flex-wrap gap-2 text-xs">
+                    <span class="px-3 py-1 bg-white border border-stone-300 rounded-lg text-stone-800 font-medium">🪟 Shutters: 1 Fixed, 2 Sliding, 3 Tri-Slide, 4 Bi-Fold</span>
+                    <span class="px-3 py-1 bg-white border border-stone-300 rounded-lg text-stone-800 font-medium">🛡 Aluminum: Alupco Thermal 2.0mm, Royal Gulf 2.5mm, Slim 1.8mm</span>
+                    <span class="px-3 py-1 bg-white border border-stone-300 rounded-lg text-stone-800 font-medium">🪞 Glass: Reflective Bronze, Low-E Clear, Smoky Grey, Frosted</span>
+                    <span class="px-3 py-1 bg-white border border-stone-300 rounded-lg text-stone-800 font-medium">⚙ Addons: Stainless Fly Screen, Multi-Lock, Motorized</span>
                 </div>
             </div>
         </div>

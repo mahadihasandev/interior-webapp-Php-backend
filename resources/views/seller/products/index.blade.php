@@ -113,8 +113,11 @@
                                         <div class="text-[11px] text-stone-500 truncate" title="{{ $p->tagline }}">
                                             {{ $p->tagline ?? $p->slug }}
                                         </div>
-                                        <div class="text-[10px] text-stone-400 font-mono mt-0.5">
-                                            SKU: {{ strtoupper(substr($p->slug, 0, 8)) }}-{{ $p->id }}
+                                        <div class="text-[10px] text-stone-400 font-mono mt-0.5 flex items-center gap-1.5">
+                                            <span>SKU: {{ strtoupper(substr($p->slug, 0, 8)) }}-{{ $p->id }}</span>
+                                            @if($p->product_type === 'custom_fit')
+                                                <span class="px-1.5 py-0.2 bg-amber-100 text-amber-900 font-bold rounded text-[9px] border border-amber-300">Made-to-Measure</span>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
@@ -144,13 +147,20 @@
 
                             <!-- Price -->
                             <td class="py-3.5 px-4">
-                                <div class="font-bold text-stone-900 text-sm">
-                                    ${{ number_format($p->price, 2) }}
-                                </div>
-                                @if($p->compare_at_price)
-                                    <div class="text-[10px] text-stone-400 line-through">
-                                        ${{ number_format($p->compare_at_price, 2) }}
+                                @if($p->product_type === 'custom_fit' && $p->compare_at_price && $p->compare_at_price > $p->price)
+                                    <div class="font-bold text-amber-900 text-sm">
+                                        ﷼{{ number_format($p->price, 0) }} – ﷼{{ number_format($p->compare_at_price, 0) }}
                                     </div>
+                                    <div class="text-[10px] text-stone-400">Custom Price Range</div>
+                                @else
+                                    <div class="font-bold text-stone-900 text-sm">
+                                        ﷼{{ number_format($p->price, 2) }}
+                                    </div>
+                                    @if($p->compare_at_price)
+                                        <div class="text-[10px] text-stone-400 line-through">
+                                            ﷼{{ number_format($p->compare_at_price, 2) }}
+                                        </div>
+                                    @endif
                                 @endif
                             </td>
 
