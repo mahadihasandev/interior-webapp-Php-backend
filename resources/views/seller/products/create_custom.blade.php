@@ -218,6 +218,18 @@
                             @change="handleMainFile($event)"
                         >
                     </div>
+                    <div class="mt-2 pt-2 border-t border-stone-100">
+                        <label class="block text-[11px] font-medium text-stone-500 mb-1">
+                            Or paste image URL (e.g. Unsplash / CDN link):
+                        </label>
+                        <input
+                            type="url"
+                            name="image_url"
+                            value="{{ old('image_url') }}"
+                            placeholder="https://images.unsplash.com/..."
+                            class="w-full text-xs px-3 py-1.5 bg-stone-50 border border-stone-200 rounded-xl focus:ring-1 focus:ring-stone-800 focus:outline-none text-stone-700"
+                        >
+                    </div>
                     <p class="text-[11px] text-stone-400">Card background image for the custom architectural grid.</p>
                 </div>
 

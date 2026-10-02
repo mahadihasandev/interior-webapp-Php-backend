@@ -26,7 +26,8 @@ if [ -z "$APP_KEY" ]; then
     export APP_KEY=$(php artisan key:generate --show)
 fi
 
-# Link public storage directory to public/storage
+# Clean up any stale or host-copied public/storage link and link properly
+rm -rf /var/www/html/public/storage
 php artisan storage:link || true
 
 # Run database migrations

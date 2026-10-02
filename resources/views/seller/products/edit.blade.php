@@ -421,17 +421,30 @@
         </div>
 
         {{-- Submit Bar --}}
-        <div class="flex items-center justify-between bg-white rounded-2xl border border-stone-200 px-6 py-4 shadow-sm">
-            <a href="{{ route('seller.products.index') }}"
-               class="px-5 py-2.5 bg-stone-100 hover:bg-stone-200 text-stone-800 text-xs font-bold rounded-xl transition-colors">
-                ← Cancel
-            </a>
+        <div class="flex flex-wrap items-center justify-between gap-4 bg-white rounded-2xl border border-stone-200 px-6 py-4 shadow-sm">
+            <div class="flex items-center gap-2">
+                <a href="{{ route('seller.products.index') }}"
+                   class="px-5 py-2.5 bg-stone-100 hover:bg-stone-200 text-stone-800 text-xs font-bold rounded-xl transition-colors">
+                    ← Cancel
+                </a>
+                <button type="button"
+                    onclick="if(confirm('Are you sure you want to permanently delete this product: {{ addslashes($product->name) }}?')) { document.getElementById('delete-product-form').submit(); }"
+                    class="px-4 py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-bold rounded-xl transition-colors border border-rose-200 flex items-center gap-1.5">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                    <span>Delete Product</span>
+                </button>
+            </div>
             <button type="submit"
                 class="px-8 py-3 bg-stone-900 hover:bg-stone-800 text-white text-xs font-bold uppercase tracking-wider rounded-xl shadow-md transition-all hover:scale-105 active:scale-95 flex items-center gap-2">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                 Save Changes
             </button>
         </div>
+    </form>
+
+    <form id="delete-product-form" method="POST" action="{{ route('seller.products.destroy', $product->id) }}" class="hidden">
+        @csrf
+        @method('DELETE')
     </form>
 </div>
 @endsection

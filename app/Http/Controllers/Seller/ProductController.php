@@ -101,7 +101,7 @@ class ProductController extends Controller
         // ── Primary Image ─────────────────────────────────────────────────
         if ($request->hasFile('image_file')) {
             $path = $request->file('image_file')->store('products', 'public');
-            $imageUrl = Storage::url($path);
+            $imageUrl = '/storage/' . $path;
         } elseif (!empty($validated['image_url'])) {
             $imageUrl = $validated['image_url'];
         } else {
@@ -113,7 +113,7 @@ class ProductController extends Controller
         if ($request->hasFile('gallery_files')) {
             foreach ($request->file('gallery_files') as $file) {
                 $gPath = $file->store('products/gallery', 'public');
-                $gallery[] = Storage::url($gPath);
+                $gallery[] = '/storage/' . $gPath;
             }
         }
 
@@ -202,25 +202,27 @@ class ProductController extends Controller
         // ── Primary Image ─────────────────────────────────────────────────
         if ($request->hasFile('image_file')) {
             // Delete old uploaded image if it's a local storage path
-            if ($product->image_url && str_contains($product->image_url, '/storage/')) {
-                $oldPath = str_replace('/storage/', '', parse_url($product->image_url, PHP_URL_PATH));
+            $oldRaw = $product->getRawOriginal('image_url');
+            if ($oldRaw && str_contains($oldRaw, '/storage/')) {
+                $oldPath = preg_replace('#^/?storage/#', '', parse_url($oldRaw, PHP_URL_PATH));
                 Storage::disk('public')->delete($oldPath);
             }
             $path = $request->file('image_file')->store('products', 'public');
-            $imageUrl = Storage::url($path);
+            $imageUrl = '/storage/' . $path;
         } elseif (!empty($validated['image_url'])) {
             $imageUrl = $validated['image_url'];
         } else {
-            // Keep existing image
-            $imageUrl = $product->image_url;
+            // Keep existing raw image URL
+            $imageUrl = $product->getRawOriginal('image_url');
         }
 
         // ── Gallery Images ────────────────────────────────────────────────
-        $gallery = $product->gallery ?? [];
+        $rawGallery = $product->getRawOriginal('gallery');
+        $gallery = is_array($rawGallery) ? $rawGallery : (json_decode($rawGallery, true) ?? []);
         if ($request->hasFile('gallery_files')) {
             foreach ($request->file('gallery_files') as $file) {
                 $gPath = $file->store('products/gallery', 'public');
-                $gallery[] = Storage::url($gPath);
+                $gallery[] = '/storage/' . $gPath;
             }
         }
 
@@ -259,20 +261,43 @@ class ProductController extends Controller
             ->with('success', "Product '{$product->name}' updated successfully.");
     }
 
-    public function destroy(Product $product)
+    public function destroy($id)
     {
-        // Clean up uploaded files
-        if ($product->image_url && str_contains($product->image_url, '/storage/')) {
-            $oldPath = str_replace('/storage/', '', parse_url($product->image_url, PHP_URL_PATH));
-            Storage::disk('public')->delete($oldPath);
+        $product = Product::find($id);
+
+        if (!$product) {
+            // Already deleted (prevents 404 on double-click or fast delete)
+            return redirect()->route('seller.products.index')
+                ->with('success', 'Product has already been deleted from the catalog.');
         }
-        if (!empty($product->gallery)) {
-            foreach ($product->gallery as $gUrl) {
-                if (str_contains($gUrl, '/storage/')) {
-                    $gPath = str_replace('/storage/', '', parse_url($gUrl, PHP_URL_PATH));
-                    Storage::disk('public')->delete($gPath);
+
+        // Clean up uploaded files safely
+        try {
+            $rawImg = $product->getRawOriginal('image_url');
+            if ($rawImg && str_contains($rawImg, '/storage/')) {
+                $oldPath = preg_replace('#^/?storage/#', '', parse_url($rawImg, PHP_URL_PATH));
+                Storage::disk('public')->delete($oldPath);
+            }
+            $rawGallery = $product->getRawOriginal('gallery');
+            $galleryItems = is_array($rawGallery) ? $rawGallery : (json_decode($rawGallery, true) ?? []);
+            if (!empty($galleryItems)) {
+                foreach ($galleryItems as $gUrl) {
+                    if (str_contains($gUrl, '/storage/')) {
+                        $gPath = preg_replace('#^/?storage/#', '', parse_url($gUrl, PHP_URL_PATH));
+                        Storage::disk('public')->delete($gPath);
+                    }
                 }
             }
+        } catch (\Throwable $e) {
+            \Log::warning("Product image cleanup notice: " . $e->getMessage());
+        }
+
+        // Detach / nullify any foreign references in child tables so deletion is never blocked
+        try {
+            \DB::table('order_items')->where('product_id', $product->id)->update(['product_id' => null]);
+            \DB::table('custom_orders')->where('product_id', $product->id)->update(['product_id' => null]);
+        } catch (\Throwable $e) {
+            // Handled
         }
 
         $name = $product->name;

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Seller\CustomArchitecturalProductController;
 use App\Http\Controllers\Seller\CustomOrderController;
 use App\Http\Controllers\Seller\ProductController;
 use App\Http\Controllers\Seller\ReadyMadeOrderController;
@@ -46,6 +47,12 @@ Route::prefix('seller')->name('seller.')->middleware('auth')->group(function () 
     Route::put('/products/{product}', [ProductController::class, 'update'])->name('products.update');
     Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
 
+    // 3b. Dedicated Custom Architectural Products Management & Serials
+    Route::get('/custom-products', [CustomArchitecturalProductController::class, 'index'])->name('custom_products.index');
+    Route::post('/custom-products/reorder', [CustomArchitecturalProductController::class, 'reorder'])->name('custom_products.reorder');
+    Route::post('/custom-products/{product}/serial', [CustomArchitecturalProductController::class, 'updateSerial'])->name('custom_products.serial');
+    Route::delete('/custom-products/{product}', [CustomArchitecturalProductController::class, 'destroy'])->name('custom_products.destroy');
+
     // 4. Taxonomy: Categories & Subcategories
     Route::get('/categories', [TaxonomyController::class, 'categories'])->name('categories.index');
     Route::post('/categories', [TaxonomyController::class, 'storeCategory'])->name('categories.store');
@@ -58,3 +65,18 @@ Route::prefix('seller')->name('seller.')->middleware('auth')->group(function () 
     // 6. Villa Architectural Designs & Custom Showcase (Majlis, Thermal Windows, Partitions, Sofas)
     Route::resource('villa-designs', VillaDesignController::class)->except(['show']);
 });
+
+// Direct public storage file serving fallback (fixes broken images if public/storage symlink is missing or on Windows/Docker/Render)
+Route::get('/storage/{path}', function (string $path) {
+    $fullPath = storage_path('app/public/' . $path);
+    if (!file_exists($fullPath)) {
+        // Fallback to high quality architectural image if file is missing (e.g. ephemeral container restart)
+        return redirect('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80');
+    }
+
+    return response()->file($fullPath, [
+        'Cache-Control' => 'public, max-age=86400',
+        'Access-Control-Allow-Origin' => '*',
+    ]);
+})->where('path', '.*');
+

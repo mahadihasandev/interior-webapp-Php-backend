@@ -49,14 +49,18 @@ class ProductService
         }
 
         // Sorting
-        $sort = $filters['sort'] ?? 'latest';
-        match ($sort) {
-            'price_asc' => $query->orderBy('price', 'asc'),
-            'price_desc' => $query->orderBy('price', 'desc'),
-            'rating' => $query->orderBy('rating', 'desc'),
-            'popular' => $query->orderBy('reviews_count', 'desc'),
-            default => $query->latest(),
-        };
+        $sort = $filters['sort'] ?? null;
+        if ($sort) {
+            match ($sort) {
+                'price_asc' => $query->orderBy('price', 'asc'),
+                'price_desc' => $query->orderBy('price', 'desc'),
+                'rating' => $query->orderBy('rating', 'desc'),
+                'popular' => $query->orderBy('reviews_count', 'desc'),
+                default => $query->latest(),
+            };
+        } else {
+            $query->orderBy('sort_order', 'asc')->orderBy('id', 'asc');
+        }
 
         return $query->paginate($perPage);
     }

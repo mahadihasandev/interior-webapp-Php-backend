@@ -61,6 +61,12 @@
                     <span>Product Catalog</span>
                 </a>
 
+                <a href="{{ route('seller.custom_products.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all {{ request()->routeIs('seller.custom_products.*') ? 'bg-amber-950 text-amber-100 shadow-xs font-semibold' : 'text-amber-950 bg-amber-50/80 hover:bg-amber-100/90 font-medium' }}">
+                    <svg class="w-4 h-4 {{ request()->routeIs('seller.custom_products.*') ? 'text-amber-400' : 'text-amber-700' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                    <span class="font-bold">Custom Architectural</span>
+                    <span class="ml-auto text-[9px] font-bold px-1.5 py-0.5 rounded bg-amber-200 text-amber-950 uppercase tracking-wider">Serials</span>
+                </a>
+
                 <a href="{{ route('seller.products.create') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors {{ request()->routeIs('seller.products.create') ? 'bg-stone-900 text-white shadow-xs font-semibold' : 'text-stone-700 hover:text-stone-900 hover:bg-stone-100' }}">
                     <svg class="w-4 h-4 {{ request()->routeIs('seller.products.create') ? 'text-white' : 'text-stone-500' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                     <span>Add New Product</span>
