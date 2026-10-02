@@ -44,7 +44,7 @@
                     <div class="flex items-start justify-between gap-3">
                         <div class="flex items-center gap-3">
                             @if($brand->logo_url)
-                                <img src="{{ $brand->logo_url }}" alt="{{ $brand->name }}" class="w-12 h-12 rounded-xl object-cover border border-stone-200">
+                                <img src="{{ $brand->logo_url }}" alt="{{ $brand->name }}" class="w-12 h-12 rounded-xl object-cover border border-stone-200" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=120&q=80';">
                             @else
                                 <div class="w-12 h-12 rounded-xl bg-stone-900 text-white flex items-center justify-center font-serif font-bold text-lg">
                                     {{ substr($brand->name, 0, 1) }}

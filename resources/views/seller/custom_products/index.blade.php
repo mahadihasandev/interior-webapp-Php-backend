@@ -216,8 +216,9 @@
 
                                         <!-- Delete button -->
                                         <button
-                                            type="button"
-                                            onclick="if(confirm('Are you sure you want to delete custom architectural product: \'{{ addslashes($p->name) }}\'?')) { document.getElementById('delete-form-{{ $p->id }}').submit(); }"
+                                            type="submit"
+                                            form="delete-form-{{ $p->id }}"
+                                            onclick="return confirm('Are you sure you want to delete custom architectural product: \'{{ addslashes($p->name) }}\'?');"
                                             class="inline-flex items-center gap-1 px-2.5 py-1.5 text-rose-600 hover:text-rose-800 bg-rose-50 hover:bg-rose-100 rounded-lg text-xs font-bold transition-colors cursor-pointer"
                                             title="Delete Custom Product"
                                         >

@@ -63,7 +63,7 @@
             <select name="category_id" class="px-3 py-1.5 text-xs bg-stone-50 border border-stone-300 rounded-xl" onchange="this.form.submit()">
                 <option value="">All Categories</option>
                 @foreach($categories as $cat)
-                    <option value="{{ $cat->id }}" {{ $categoryId == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
+                    <option value="{{ $cat->id }}" {{ ($categoryId ?? '') == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
                 @endforeach
             </select>
 
@@ -71,7 +71,7 @@
             <select name="brand_id" class="px-3 py-1.5 text-xs bg-stone-50 border border-stone-300 rounded-xl" onchange="this.form.submit()">
                 <option value="">All Brands & Studios</option>
                 @foreach($brands as $b)
-                    <option value="{{ $b->id }}" {{ $brandId == $b->id ? 'selected' : '' }}>{{ $b->name }}</option>
+                    <option value="{{ $b->id }}" {{ ($brandId ?? '') == $b->id ? 'selected' : '' }}>{{ $b->name }}</option>
                 @endforeach
             </select>
 
@@ -212,16 +212,11 @@
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                                     </a>
 
-                                    <form method="POST" action="{{ route('seller.products.destroy', $p->id) }}" onsubmit="return confirm('Are you sure you want to delete this product: {{ addslashes($p->name) }}?');" class="inline" x-data="{ deleting: false }" @submit="if(deleting) return false; deleting = true;">
+                                    <form method="POST" action="{{ route('seller.products.destroy', $p->id) }}" onsubmit="if(!confirm('Are you sure you want to delete this product: {{ addslashes($p->name) }}?')) return false; this.querySelector('button[type=submit]').disabled = true; return true;" class="inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" :disabled="deleting" class="p-1.5 text-stone-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed" title="Delete Product">
-                                            <template x-if="!deleting">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                                            </template>
-                                            <template x-if="deleting">
-                                                <svg class="w-4 h-4 animate-spin text-rose-600" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                                            </template>
+                                        <button type="submit" class="p-1.5 text-stone-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer" title="Delete Product">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                                         </button>
                                     </form>
                                 </div>

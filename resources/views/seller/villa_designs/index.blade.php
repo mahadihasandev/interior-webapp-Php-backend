@@ -107,7 +107,8 @@
                     {{-- Photo Box with Exact Storefront Badges --}}
                     <div class="relative aspect-16/10 overflow-hidden bg-stone-950">
                         <img src="{{ $design->photo_url }}" alt="{{ $design->title_en }}"
-                             class="w-full h-full object-cover object-center filter brightness-[0.92]">
+                             class="w-full h-full object-cover object-center filter brightness-[0.92]"
+                             onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=80';">
                         <div class="absolute inset-0 bg-gradient-to-t from-stone-950/85 via-stone-950/20 to-black/30"></div>
 
                         {{-- Top Badges --}}

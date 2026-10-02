@@ -195,7 +195,7 @@
                                     @foreach($ord->items as $item)
                                         <div class="flex items-center gap-3">
                                             @if($item->product && $item->product->image_url)
-                                                <img src="{{ $item->product->image_url }}" alt="{{ $item->product_name }}" class="w-11 h-11 rounded-lg object-cover border border-stone-200 shrink-0">
+                                                <img src="{{ $item->product->image_url }}" alt="{{ $item->product_name }}" class="w-11 h-11 rounded-lg object-cover border border-stone-200 shrink-0" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=120&q=80';">
                                             @else
                                                 <div class="w-11 h-11 rounded-lg bg-stone-100 border border-stone-200 flex items-center justify-center text-stone-400 text-xs shrink-0">
                                                     🪑

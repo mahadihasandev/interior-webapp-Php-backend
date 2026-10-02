@@ -53,7 +53,7 @@
                 <div>
                     <!-- Banner Image / Header -->
                     <div class="h-36 relative overflow-hidden bg-stone-900">
-                        <img src="{{ $cat->image_url }}" alt="{{ $cat->name }}" class="w-full h-full object-cover filter brightness-75">
+                        <img src="{{ $cat->image_url }}" alt="{{ $cat->name }}" class="w-full h-full object-cover filter brightness-75" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=600&q=80';">
                         <div class="absolute inset-0 bg-gradient-to-t from-stone-950/80 via-transparent to-transparent"></div>
                         <div class="absolute bottom-3 left-4 right-4 flex items-end justify-between">
                             <div>

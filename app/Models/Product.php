@@ -74,11 +74,20 @@ class Product extends Model
      */
     public function getImageUrlAttribute(?string $value): ?string
     {
-        if (empty($value)) {
-            return null;
+        $fallback = 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80';
+
+        if (empty($value) || !is_string($value) || trim($value) === '') {
+            return $fallback;
         }
 
-        // Fix legacy dead domain from initial deployment
+        $value = trim($value);
+
+        // Normalize full URLs pointing to storage back to clean relative paths
+        if (preg_match('#https?://[^/]+(/storage/.+)#i', $value, $matches)) {
+            $value = $matches[1];
+        }
+
+        // Fix legacy dead domain from initial deployment for any other assets
         if (str_contains($value, 'interior-webapp-php.onrender.com')) {
             $value = str_replace(
                 'interior-webapp-php.onrender.com',
@@ -87,12 +96,23 @@ class Product extends Model
             );
         }
 
-        // If stored as relative local storage path, generate full URL
-        if (str_starts_with($value, '/storage/')) {
-            return url($value);
-        }
-        if (str_starts_with($value, 'storage/')) {
-            return url('/' . $value);
+        // Handle local storage paths
+        if (str_starts_with($value, '/storage/') || str_starts_with($value, 'storage/')) {
+            $relPath = '/' . ltrim($value, '/');
+            $diskSubPath = preg_replace('#^/storage/#', '', $relPath);
+            $fullDiskPath = storage_path('app/public/' . $diskSubPath);
+
+            // If file does not exist on disk, return high-quality architectural fallback
+            if (!file_exists($fullDiskPath)) {
+                return $fallback;
+            }
+
+            // In web dashboard requests, root-relative URL (/storage/...) avoids HTTPS/port issues
+            if (!request()->is('api/*')) {
+                return $relPath;
+            }
+
+            return url($relPath);
         }
 
         return $value;
@@ -108,8 +128,16 @@ class Product extends Model
             return [];
         }
 
-        return array_values(array_map(function ($url) {
-            if (empty($url) || !is_string($url)) return $url;
+        $fallback = 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80';
+
+        return array_values(array_map(function ($url) use ($fallback) {
+            if (empty($url) || !is_string($url) || trim($url) === '') return $fallback;
+            $url = trim($url);
+
+            if (preg_match('#https?://[^/]+(/storage/.+)#i', $url, $matches)) {
+                $url = $matches[1];
+            }
+
             if (str_contains($url, 'interior-webapp-php.onrender.com')) {
                 $url = str_replace(
                     'interior-webapp-php.onrender.com',
@@ -117,12 +145,23 @@ class Product extends Model
                     $url
                 );
             }
-            if (str_starts_with($url, '/storage/')) {
-                return url($url);
+
+            if (str_starts_with($url, '/storage/') || str_starts_with($url, 'storage/')) {
+                $relPath = '/' . ltrim($url, '/');
+                $diskSubPath = preg_replace('#^/storage/#', '', $relPath);
+                $fullDiskPath = storage_path('app/public/' . $diskSubPath);
+
+                if (!file_exists($fullDiskPath)) {
+                    return $fallback;
+                }
+
+                if (!request()->is('api/*')) {
+                    return $relPath;
+                }
+
+                return url($relPath);
             }
-            if (str_starts_with($url, 'storage/')) {
-                return url('/' . $url);
-            }
+
             return $url;
         }, $gallery));
     }

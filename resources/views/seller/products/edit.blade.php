@@ -121,7 +121,7 @@
                         <div class="aspect-4/3 bg-stone-100">
                             <img :src="previewUrl" alt="Product Photo"
                                  class="w-full h-full object-cover"
-                                 onerror="this.src='https://placehold.co/600x400/f5f5f4/a8a29e?text=No+Image'">
+                                 onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=80';">
                         </div>
 
                         {{-- Overlay --}}
@@ -161,7 +161,7 @@
                         <div class="grid grid-cols-4 gap-1.5 mb-2">
                             @foreach($product->gallery as $gUrl)
                                 <div class="aspect-square rounded-xl overflow-hidden bg-stone-100 border border-stone-200">
-                                    <img src="{{ $gUrl }}" alt="Gallery" class="w-full h-full object-cover">
+                                    <img src="{{ $gUrl }}" alt="Gallery" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=400&q=80';">
                                 </div>
                             @endforeach
                         </div>
